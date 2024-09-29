@@ -1,64 +1,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Define the node structure
 struct Node {
     int data;
     struct Node* next;
 };
 
-struct Stack {
-    struct Node* top;
-};
+// Initialize the stack (top pointer)
+struct Node* top = NULL;
 
-struct Stack* createStack() {
-    struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
-    stack->top = NULL;
-    return stack;
+// Function to initialize the stack
+void initializeStack() {
+    top = NULL;
 }
 
-int isEmpty(struct Stack* stack) {
-    return stack->top == NULL;
+// Function to push an element onto the stack
+void push(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    if (newNode == NULL) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    newNode->data = data;
+    newNode->next = top;
+    top = newNode;
 }
 
-void push(struct Stack* stack, int data) {
-    struct Node* new_node = (struct Node*)malloc(sizeof(struct Node));
-    new_node->data = data;
-    new_node->next = stack->top;
-    stack->top = new_node;
-    printf("%d stack m entry kra :)\n", data);
-}
-
-int pop(struct Stack* stack) {
-    if (isEmpty(stack)) {
-        printf("Stack khali hai g\n");
+// Function to pop an element from the stack
+int pop() {
+    if (top == NULL) {
+        printf("Stack Underflow\n");
         return -1;
     }
-    struct Node* temp = stack->top;
-    int data = temp->data;
-    stack->top = stack->top->next;
+    int data = top->data;
+    struct Node* temp = top;
+    top = top->next;
     free(temp);
     return data;
 }
 
-int peek(struct Stack* stack) {
-    if (isEmpty(stack)) {
-        printf("Stack khali hai g\n");
+// Function to peek at the top element of the stack
+int peek() {
+    if (top == NULL) {
+        printf("Stack is empty\n");
         return -1;
     }
-    return stack->top->data;
+    return top->data;
 }
 
+// Function to check if the stack is empty
+int isEmpty() {
+    return top == NULL;
+}
+
+// Main function to test the stack operations
 int main() {
-    struct Stack* stack = createStack();
+    initializeStack();
 
-    push(stack, 10);
-    push(stack, 20);
-    push(stack, 30);
+    push(10);
+    push(20);
+    push(30);
 
-    printf("Top element is %d\n", peek(stack));
+    printf("Top element is %d\n", peek());
 
-    printf("Popped element is %d\n", pop(stack));
-    printf("Top element is %d\n", peek(stack));
+    printf("Popped element is %d\n", pop());
+    printf("Popped element is %d\n", pop());
+
+    if (isEmpty()) {
+        printf("Stack is empty\n");
+    } else {
+        printf("Stack is not empty\n");
+    }
 
     return 0;
 }
